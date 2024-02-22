@@ -1,0 +1,60 @@
+import React, { useState, useEffect } from "react";
+
+function PopularRepos() {
+  const [repos, setRepos] = useState([]);
+  const [language, setLanguage] = useState("javascript");
+
+  useEffect(() => {
+    fetch(
+      `https://api.github.com/search/repositories?q=stars:%3E1+language:${language}&sort=stars&order=desc&type=Repositories`
+    )
+      .then((response) => response.json())
+      .then((data) => setRepos(data.items))
+      .catch((error) => console.error("Error fetching repos:", error));
+  }, [language]);
+
+  return (
+    <div>
+      <h2>Popular Repos</h2>
+      <div>
+        <center>
+          <button onClick={() => setLanguage("all")}>All</button>
+          <button onClick={() => setLanguage("javascript")}>JavaScript</button>
+          <button onClick={() => setLanguage("python")}>Ruby</button>
+          <button onClick={() => setLanguage("python")}>Java</button>
+          <button onClick={() => setLanguage("python")}>CSS</button>
+          <button onClick={() => setLanguage("python")}>Python</button>
+          {/* Add more buttons for other languages as needed */}
+        </center>
+      </div>
+      <ul>
+        <div className="flex wrap">
+          {repos.map((repo) => (
+            <li key={repo.id} className="box">
+              <a href={repo.html_url}>{repo.name}</a>
+              <p>
+                <i class="fa-solid fa-user"></i>
+                {repo.name}
+              </p>
+              <p></p>
+              <p>
+                <i class="fa-solid fa-star"></i>
+                {repo.watchers}
+              </p>
+              <p>
+                <i class="fa-solid fa-code-fork"></i>
+                {repo.forks}
+              </p>
+              <p>
+                <i class="fa-solid fa-circle-exclamation"></i>
+                {repo.open_issues}
+              </p>
+            </li>
+          ))}
+        </div>
+      </ul>
+    </div>
+  );
+}
+
+export default PopularRepos;
