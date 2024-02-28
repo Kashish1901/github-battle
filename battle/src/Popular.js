@@ -1,58 +1,109 @@
 import React, { useState, useEffect } from "react";
+import Loading from "./Loading";
+import {
+  FaUser,
+  FaStar,
+  FaCodeBranch,
+  FaExclamationTriangle,
+} from "react-icons/fa";
 
 function PopularRepos() {
   const [repos, setRepos] = useState([]);
   const [language, setLanguage] = useState("javascript");
+  const [loading, setLoading] = useState(false);
+  const languages = ["All", "JavaScript", "Ruby", "Java", "CSS", "Python"];
 
   useEffect(() => {
+    setLoading(true);
     fetch(
       `https://api.github.com/search/repositories?q=stars:%3E1+language:${language}&sort=stars&order=desc&type=Repositories`
     )
       .then((response) => response.json())
-      .then((data) => setRepos(data.items))
-      .catch((error) => console.error("Error fetching repos:", error));
+      .then((data) => {
+        setRepos(data.items);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching repos:", error);
+        setLoading(false);
+      });
   }, [language]);
 
   return (
     <div>
-      <h2>Popular Repos</h2>
       <div>
         <center>
-          <button onClick={() => setLanguage("all")}>All</button>
-          <button onClick={() => setLanguage("javascript")}>JavaScript</button>
-          <button onClick={() => setLanguage("python")}>Ruby</button>
-          <button onClick={() => setLanguage("python")}>Java</button>
-          <button onClick={() => setLanguage("python")}>CSS</button>
-          <button onClick={() => setLanguage("python")}>Python</button>
-          {/* Add more buttons for other languages as needed */}
+          <ul className="center">
+            {languages.map((language) => (
+              <li key={language}>
+                <button onClick={() => setLanguage(language)}>
+                  {language}
+                </button>
+              </li>
+            ))}
+          </ul>
         </center>
       </div>
-      <ul>
-        <div className="flex wrap">
-          {repos.map((repo) => (
-            <li key={repo.id} className="box">
-              <a href={repo.html_url}>{repo.name}</a>
-              <p>
-                <i class="fa-solid fa-user"></i>
-                {repo.name}
-              </p>
-              <p></p>
-              <p>
-                <i class="fa-solid fa-star"></i>
-                {repo.watchers}
-              </p>
-              <p>
-                <i class="fa-solid fa-code-fork"></i>
-                {repo.forks}
-              </p>
-              <p>
-                <i class="fa-solid fa-circle-exclamation"></i>
-                {repo.open_issues}
-              </p>
-            </li>
-          ))}
-        </div>
-      </ul>
+      {loading ? (
+        <Loading text="Fetching data...." />
+      ) : (
+        <ul>
+          <div className="flex wrap">
+            {repos.map((repo, index) => {
+              const {
+                name,
+                owner,
+                html_url,
+                stargazers_count,
+                forks,
+                open_issues,
+              } = repo;
+              const { login, avatar_url } = owner;
+              return (
+                <li key={repo.id} className="box">
+                  <p>{`#${index + 1}`}</p>
+                  <h2>
+                    <a href={html_url}>{name}</a>
+                  </h2>
+                  <p>
+                    <FaUser
+                      color="rgb(255, 191, 116)"
+                      size={22}
+                      className="right"
+                    />
+                    <a href={`https://github.com/${login}`}>{login}</a>
+                  </p>
+                  <p>
+                    <FaStar
+                      color="rgb(255, 215, 0)"
+                      size={22}
+                      className="right"
+                    />
+                    {stargazers_count.toLocaleString()} stars
+                  </p>
+
+                  <p>
+                    <FaCodeBranch
+                      color="rgb(129, 195, 245)"
+                      size={22}
+                      className="right"
+                    />
+                    {forks.toLocaleString()} forks
+                  </p>
+                  <p>
+                    <FaExclamationTriangle
+                      color="rgb(241, 138, 147)"
+                      size={22}
+                      className="right"
+                    />
+                    {open_issues.toLocaleString()} open
+                  </p>
+                </li>
+              );
+            })}
+          </div>
+        </ul>
+      )}
     </div>
   );
 }

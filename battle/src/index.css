@@ -17,6 +17,14 @@ code {
   justify-content: space-between;
   align-items: center;
 }
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.right {
+  padding-right: 10px;
+}
 .container {
   max-width: 1000px;
   margin: 0 auto;
@@ -40,6 +48,7 @@ li {
 a {
   text-decoration: none;
   font-size: 25px;
+  color: none;
 }
 p {
   font-size: 25px;
@@ -50,11 +59,38 @@ button {
   background-color: white;
   font-size: 25px;
 }
+
 .box {
   background-color: rgb(235, 235, 235);
   text-align: center;
   padding: 20px;
   margin: 5px;
   width: 250px;
-  height: 300px;
+  height: 430px;
+}
+h2 a {
+  font-size: 20px;
+  color: rgb(187, 46, 31);
+}
+.box-small {
+  background-color: rgb(235, 235, 235);
+  height: 100px;
+  padding: 70px;
+  width: 100px;
+  text-align: center;
+}
+.input input,
+button {
+  font-size: 23px;
+  padding: 10px;
+  box-shadow: 1px 1px 6px 1px;
+}
+button {
+  margin-left: 10px;
+}
+.player-label {
+  text-align: left;
+  margin-bottom: 10px;
+  font-size: 25px;
+  padding: 20px;
 }
